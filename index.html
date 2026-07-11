@@ -2,37 +2,360 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crystal's Beauty Field</title>
   <style>
+    :root {
+      --bg-deep: #1a001a;
+      --violet: #c040ff;
+      --pink: #ff40a0;
+      --moonlight: #f0e8ff;
+      --card-bg: rgba(255, 255, 255, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #1a001a;
-      color: #f0c0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      font-family: "Segoe UI", "Poppins", system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 10%, rgba(192, 64, 255, 0.18), transparent 40%),
+                  radial-gradient(circle at 80% 90%, rgba(255, 64, 160, 0.2), transparent 40%),
+                  var(--bg-deep);
+      color: var(--moonlight);
       min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    #stars {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      display: block;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
       text-align: center;
+      padding: 6rem 1rem 2rem;
+      overflow: hidden;
+      isolation: isolate;
     }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 26rem;
+      height: 26rem;
+      left: var(--mx, 50%);
+      top: var(--my, 50%);
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255, 64, 160, 0.24), rgba(192, 64, 255, 0.04) 60%, transparent 75%);
+      filter: blur(12px);
+      pointer-events: none;
+      transition: left 0.12s linear, top 0.12s linear;
+      z-index: -1;
+    }
+
+    .moon {
+      position: absolute;
+      top: 12%;
+      right: 9%;
+      width: min(26vw, 180px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff 0%, #f8ebff 35%, #e8ccff 70%, #d4a8ff 100%);
+      box-shadow: 0 0 35px rgba(240, 232, 255, 0.8), 0 0 90px rgba(192, 64, 255, 0.5);
+      animation: floatMoon 7s ease-in-out infinite;
+    }
+
+    .moon::after {
+      content: "";
+      position: absolute;
+      inset: 18% 20% auto auto;
+      width: 18%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(180, 140, 220, 0.4);
+      box-shadow: -25px 16px 0 rgba(190, 150, 230, 0.35), -45px 40px 0 rgba(180, 130, 220, 0.3);
+    }
+
+    .hero-content {
+      max-width: 900px;
+      position: relative;
+      z-index: 1;
+      animation: riseIn 1s ease both;
+    }
+
     h1 {
-      font-size: 3rem;
-      color: #e080ff;
-      text-shadow: 0 0 20px #c040ff;
+      margin: 0 0 0.9rem;
+      font-size: clamp(2.1rem, 6vw, 4.6rem);
+      letter-spacing: 0.03em;
+      color: var(--moonlight);
+      text-shadow: 0 0 12px rgba(240, 232, 255, 0.9), 0 0 26px var(--violet), 0 0 44px var(--pink);
+      animation: glowPulse 2.6s ease-in-out infinite;
     }
-    p {
-      font-size: 1.2rem;
-      max-width: 600px;
-      line-height: 1.6;
-      color: #d0a0d0;
+
+    .tagline {
+      margin: 0 auto 1.7rem;
+      max-width: 700px;
+      color: #f5dcff;
+      font-size: clamp(1rem, 2.4vw, 1.35rem);
+      opacity: 0.95;
+      animation: shimmer 3.6s linear infinite;
+    }
+
+    .cta {
+      display: inline-block;
+      padding: 0.86rem 1.5rem;
+      border-radius: 999px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      background: linear-gradient(100deg, var(--violet), var(--pink));
+      box-shadow: 0 0 16px rgba(255, 64, 160, 0.7), 0 0 36px rgba(192, 64, 255, 0.5);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .cta:hover,
+    .cta:focus-visible {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 0 22px rgba(255, 64, 160, 0.95), 0 0 48px rgba(192, 64, 255, 0.8);
+      outline: none;
+    }
+
+    main {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+      padding: 1rem 0 4rem;
+    }
+
+    section {
+      margin-top: 2.2rem;
+      background: rgba(26, 0, 26, 0.52);
+      border: 1px solid rgba(240, 232, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(2px);
+      padding: clamp(1.2rem, 3vw, 2.1rem);
+      box-shadow: 0 0 40px rgba(192, 64, 255, 0.12);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #f8e8ff;
+      text-shadow: 0 0 12px rgba(192, 64, 255, 0.45);
+      font-size: clamp(1.35rem, 3vw, 2rem);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 16px;
+      padding: 1rem;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      min-height: 160px;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 64, 160, 0.7);
+      box-shadow: 0 0 18px rgba(255, 64, 160, 0.5), 0 0 34px rgba(192, 64, 255, 0.4);
+    }
+
+    .feature-title {
+      margin: 0 0 0.55rem;
+      font-weight: 700;
+      color: #ffe9ff;
+    }
+
+    .about p,
+    .feature-card p,
+    footer p {
+      margin: 0;
+      color: #e8ccff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.4rem 1rem 2.2rem;
+      color: #d7b4ef;
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .socials a {
+      color: #ffd6ff;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 214, 255, 0.4);
+    }
+
+    .socials a:hover { color: #fff; }
+
+    @keyframes floatMoon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { text-shadow: 0 0 10px rgba(240, 232, 255, 0.88), 0 0 26px var(--violet), 0 0 44px var(--pink); }
+      50% { text-shadow: 0 0 16px rgba(240, 232, 255, 1), 0 0 35px var(--violet), 0 0 62px var(--pink); }
+    }
+
+    @keyframes shimmer {
+      0% { filter: brightness(0.9); }
+      50% { filter: brightness(1.08); }
+      100% { filter: brightness(0.9); }
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .features-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .moon { top: 10%; right: 6%; width: min(30vw, 150px); }
+    }
+
+    @media (max-width: 620px) {
+      .hero { padding-top: 5rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .moon { opacity: 0.85; top: 6%; right: -8%; width: min(44vw, 140px); }
     }
   </style>
 </head>
 <body>
-  <h1>✨ Crystal's Beauty Field ✨</h1>
-  <p>AI image prompts · Character arcs · Story boards · Video · GenZ vibes</p>
-  <p>Coming soon 💜</p>
+  <canvas id="stars" aria-hidden="true"></canvas>
+
+  <header class="hero" id="top">
+    <div class="moon" aria-hidden="true"></div>
+    <div class="hero-content">
+      <h1>Crystal's Beauty Field ✨</h1>
+      <p class="tagline">Fly through cosmic creativity where AI image prompts, character arcs, storyboards, and GenZ-ready video energy collide.</p>
+      <a class="cta" href="#features">Enter the Field</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="features" aria-labelledby="features-title">
+      <h2 id="features-title">Creative Constellations</h2>
+      <div class="features-grid">
+        <article class="feature-card">
+          <h3 class="feature-title">AI Image Prompts 🎨</h3>
+          <p>Vivid prompt packs crafted to spark dreamy visuals, neon moods, and moonlit fantasy scenes.</p>
+        </article>
+        <article class="feature-card">
+          <h3 class="feature-title">Character Arcs 🦋</h3>
+          <p>Emotion-rich journeys and personalities that transform sketches into unforgettable protagonists.</p>
+        </article>
+        <article class="feature-card">
+          <h3 class="feature-title">Story Boards 🎬</h3>
+          <p>Scene-by-scene narrative maps that guide cinematic flow from opening shot to final glow.</p>
+        </article>
+        <article class="feature-card">
+          <h3 class="feature-title">Video &amp; GenZ 📱</h3>
+          <p>Trend-forward visual direction tuned for short-form storytelling, edits, motion, and social energy.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <h2 id="about-title">About Crystal's Beauty Field</h2>
+      <p>Crystal's Beauty Field is a creative moonbase for dreamers, makers, and storytellers building the next wave of AI-powered aesthetics. Our mission is to turn imagination into immersive art direction with style, intention, and cosmic vibes.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="socials" aria-label="Social links">
+      <a href="#" aria-label="Instagram placeholder">Instagram</a>
+      <a href="#" aria-label="TikTok placeholder">TikTok</a>
+      <a href="#" aria-label="YouTube placeholder">YouTube</a>
+    </div>
+    <p>&copy; <span id="year"></span> Crystal's Beauty Field. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      const canvas = document.getElementById("stars");
+      const ctx = canvas.getContext("2d");
+      const starCount = Math.min(220, Math.floor((window.innerWidth * window.innerHeight) / 6500));
+      const stars = [];
+
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      function createStars() {
+        stars.length = 0;
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: random(0.5, 1.8),
+            a: random(0.2, 1),
+            d: random(0.003, 0.015)
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const s of stars) {
+          s.a += s.d;
+          if (s.a <= 0.15 || s.a >= 1) s.d *= -1;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(240,232,255,${s.a})`;
+          ctx.shadowColor = "#c040ff";
+          ctx.shadowBlur = 10;
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener("resize", () => {
+        resize();
+        createStars();
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.documentElement.style.setProperty("--mx", `${x}%`);
+        document.documentElement.style.setProperty("--my", `${y}%`);
+      });
+
+      const year = document.getElementById("year");
+      if (year) year.textContent = new Date().getFullYear();
+
+      resize();
+      createStars();
+      draw();
+    })();
+  </script>
 </body>
 </html>
