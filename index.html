@@ -379,6 +379,7 @@
       function createStars() {
         stars.length = 0;
         /* Recalculate count based on current canvas size */
+        /* 6500: target pixel area per star — tune this to adjust visual density */
         var count = Math.min(220, Math.floor((canvas.width * canvas.height) / 6500));
         for (var i = 0; i < count; i++) {
           stars.push({
@@ -396,6 +397,7 @@
         for (var i = 0; i < stars.length; i++) {
           var s = stars[i];
           s.a += s.d;
+          /* 0.15: dimmest visible alpha for the twinkling fade */
           if (s.a <= 0.15 || s.a >= 1) s.d *= -1;
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
