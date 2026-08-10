@@ -1,0 +1,40 @@
+{
+  "name": "ai-symphony-orchestrator",
+  "version": "1.0.0",
+  "description": "Orchestrator configuration for AI Symphony",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zeno6978/cystalsbeautyfield.com"
+  },
+  "orchestrator": {
+    "engine": "smol-symphony",
+    "issueTracker": "issues.md",
+    "vms": {
+      "orchestrator": {
+        "size": "Standard_B2s",
+        "role": "conductor"
+      },
+      "builder": {
+        "size": "Standard_D8s_v3",
+        "role": "heavy_processing"
+      }
+    },
+    "agents": [
+      {
+        "id": "claude-planner",
+        "model": "claude-3-opus-20240229",
+        "role": "architect"
+      },
+      {
+        "id": "deepseek-logic",
+        "model": "deepseek-reasoner",
+        "role": "algorithm_design"
+      },
+      {
+        "id": "claude-coder",
+        "model": "claude-3-5-sonnet-20240620",
+        "role": "implementation"
+      }
+    ]
+  }
+}
